@@ -1,0 +1,51 @@
+body {
+    margin: 0px;
+    font-family: "JetBrains Mono", sans-serif;
+    font-weight: 400;
+    font-style: normal;;
+}
+
+#intro {
+    padding: 50px;
+}
+
+h1 {
+    color: white;
+    background-image: url("images/i-beams.jpg");
+    background-position: "center";
+    background-attachment: fixed;
+    margin: 0px;
+    padding: 50px;
+}
+
+h2 {
+    margin-top: 0px;
+}
+
+#main-area {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+#input-area {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#drawing-area {
+    /*border: 1px solid black;*/
+    /*height: 800px;*/
+    width: 800px;
+    margin: auto;
+}
+
+.deletable:hover {
+  color: darkred;
+  cursor: pointer;
+}
+
+#support-list li {
+    marker: none;
+}

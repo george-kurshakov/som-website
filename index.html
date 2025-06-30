@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>G.K. SoM Calculator</title>
+        <link rel="icon" href="images/favicon.svg">
+        <link rel="stylesheet" href="style.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <script src="index.js"></script>
+    </head>
+    <body>
+        <header>
+            <h1>G.K. SoM Calculator</h1>
+        </header>
+        <div id="intro">
+            <h2>Hello and welcome! My name is <span id="my-name">George Kurshakov</span>, and I have many passions, which include mechanical engineering and web design.</h2>
+            <p>This simple website is a tool that allows you to create your mechanical structures and analyze reactions and internal forces. Have fun using it, and I hope you find it useful!</p>
+        </div>
+        <div id="main-area">
+            <form id="input-area">
+                <label for="length">Длина балки: </label>
+                <input type="text" id="length">
+                <label for="length">м</label><br><br>
+                <h3>Новая опора</h3>
+                <label>Расстояние от начала балки: </label>
+                <input type="text" id="support-x">
+                <label for="support-x">м</label><br>
+                <label for="support-type">Тип: </label>
+                <select id="support-type">
+                    <option name="no-support">Нет</option>
+                    <option name="pinned-support">Шарнирно-неподвижная</option>
+                    <option name="roller-support">Шарнирно-подвижная</option>
+                    <option name="fixed-support">Заделка</option>
+                </select><br>
+                <input type="button" value="Добавить" id="add-support" disabled></input><br>
+                <h3>Опоры: </h3>
+                <ul id="support-list">
+                    Нет опор
+                </ul>
+            </form>
+            <div id="drawing-area">
+                <svg id="my-svg" width="100%" translate="yes">
+                    
+                </svg>
+            </div>
+        </div>
+        <script src="code.js"></script>
+    </body>
+</html>
