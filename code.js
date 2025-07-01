@@ -8,11 +8,13 @@ const addSupport = document.getElementById("add-support");
 const supportList = document.getElementById("support-list");
 let beamSVG = null;
 let supports = [];
+let dimensions = [];
+let dimensionsSVG = null;
 
 function drawPinnedSupport(x, y) {
     let pinnedSVG = document.createElementNS('http://www.w3.org/2000/svg',"g");
     pinnedSVG.setAttributeNS(null, "style", "fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1");
-    pinnedSVG.setAttributeNS(null, "transform", "translate(" + (50 + 100*x).toString() + " " + (50 - 100*y).toString() + ")");
+    pinnedSVG.setAttributeNS(null, "transform", "translate(" + (50 + 500*x/lengthBox.value).toString() + " " + (50 - 500*y/lengthBox.value).toString() + ")");
     let path = document.createElementNS('http://www.w3.org/2000/svg',"path");
     path.setAttributeNS(null, "d", "M 0,0 l -10,16 l 20,0 Z");
     let circle = document.createElementNS('http://www.w3.org/2000/svg',"circle");
@@ -22,7 +24,6 @@ function drawPinnedSupport(x, y) {
     let hatch = document.createElementNS('http://www.w3.org/2000/svg',"path");
     hatch.setAttributeNS(null, "d", "M -5,16 l -5,5 m 10,-5 l -5,5 m 10,-5 l -5,5 m 10,-5 l -5,5");
     mySVG.appendChild(pinnedSVG);
-    pinnedSVG.classList.add("draggable");
     pinnedSVG.appendChild(path);
     pinnedSVG.appendChild(circle);
     pinnedSVG.appendChild(hatch);
@@ -32,7 +33,7 @@ function drawPinnedSupport(x, y) {
 function drawRollerSupport(x, y) {
     let rollerSVG = document.createElementNS('http://www.w3.org/2000/svg',"g");
     rollerSVG.setAttributeNS(null, "style", "fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1");
-    rollerSVG.setAttributeNS(null, "transform", "translate(" + (50 + 100*x).toString() + " " + (50 - 100*y).toString() + ")");
+    rollerSVG.setAttributeNS(null, "transform", "translate(" + (50 + 500*x/lengthBox.value).toString() + " " + (50 - 500*y/lengthBox.value).toString() + ")");
     let path = document.createElementNS('http://www.w3.org/2000/svg',"path");
     path.setAttributeNS(null, "d", "M 0,0 l -10,16 l 20,0 Z");
     let circle = document.createElementNS('http://www.w3.org/2000/svg',"circle");
@@ -61,7 +62,7 @@ function drawRollerSupport(x, y) {
 function drawFixedSupport(x, y) {
     let fixedSVG = document.createElementNS('http://www.w3.org/2000/svg',"g");
     fixedSVG.setAttributeNS(null, "style", "fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1");
-    fixedSVG.setAttributeNS(null, "transform", "translate(" + (50 + 100*x).toString() + " " + (50 - 100*y).toString() + ")");
+    fixedSVG.setAttributeNS(null, "transform", "translate(" + (50 + 500*x/lengthBox.value).toString() + " " + (50 - 500*y/lengthBox.value).toString() + ")");
     let path = document.createElementNS('http://www.w3.org/2000/svg',"path");
     path.setAttributeNS(null, "d", "M 0,-20 l 0,40");
     let hatch = document.createElementNS('http://www.w3.org/2000/svg',"path");
@@ -82,6 +83,43 @@ function drawBeam() {
     return path;
 }
 
+function updateDimensions() {
+    if (dimensionsSVG != null)
+    {
+        mySVG.removeChild(dimensionsSVG);
+        dimensionsSVG = null;
+    }
+        
+    if (lengthBox.value == "" && lengthBox.value == 0)
+        return;
+    dimensions = [0, parseFloat(lengthBox.value)];
+    for (let i = 0; i < supports.length; i++) {
+        if (supports[i][2] != 0 && supports[i][2] != lengthBox.value)
+            dimensions.push(supports[i][2]);
+    }
+    dimensions.sort();
+    dimensionsSVG = document.createElementNS('http://www.w3.org/2000/svg',"g");
+    let dimLines = document.createElementNS('http://www.w3.org/2000/svg',"path");
+    dimLines.setAttributeNS(null, "d", "M 0, 50 l 500, 0");
+    dimensionsSVG.appendChild(dimLines);
+    for (let i = 0; i < dimensions.length; i++) {
+        dimLines = document.createElementNS('http://www.w3.org/2000/svg',"path");
+        dimLines.setAttributeNS(null, "d", `M ${(500 * dimensions[i] / parseFloat(lengthBox.value)).toString()}, 0 l 0, 55`);
+        dimensionsSVG.appendChild(dimLines);
+        console.log(typeof(dimensions[i]));
+        if (i > 0) {
+            let dimText = document.createElementNS('http://www.w3.org/2000/svg',"text");
+            dimText.innerHTML = (dimensions[i] - dimensions[i-1]).toString() + "м";
+            dimText.setAttributeNS(null, "transform", "translate(" + ((500 / parseFloat(lengthBox.value)) * 0.5*(dimensions[i] + dimensions[i-1]) - 10).toString() + " 45)");
+            dimText.setAttributeNS(null, "style", "fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1");
+            dimensionsSVG.setAttributeNS(null, "style", "fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1");
+            dimensionsSVG.setAttributeNS(null, "transform", "translate(50 50)");
+            dimensionsSVG.appendChild(dimText);
+        }
+    }
+    mySVG.appendChild(dimensionsSVG);
+}
+
 function updateSupportDisplay() {
     supportList.innerHTML = "";
     if (supports.length > 0) {
@@ -97,24 +135,40 @@ function updateSupportDisplay() {
     }
 }
 
+function deleteSupport(index) {
+    mySVG.removeChild(supports[index][0]);
+    supports.splice(index, 1);
+}
+
 myName.addEventListener("mouseenter", function () {this.style.fontWeight=1000;});
 myName.addEventListener("mouseleave", function () {this.style.fontWeight=700;});
+
 lengthBox.addEventListener("input", () => {
     if (lengthBox.value != "" && lengthBox.value != 0) {
-        if (beamSVG==null)
+        if (beamSVG==null) {
             beamSVG = drawBeam();
+            updateDimensions();
+            dimensions.push(lengthBox.value);
+        }
+        if (supportType.value !== "Нет")
+            addSupport.disabled = false;
     }
     else {
+        addSupport.disabled = true;
         mySVG.removeChild(beamSVG);
         beamSVG = null;
-        for (let i = 0; i < supports.length; i++)
-            mySVG.removeChild(supports[i]);
+        while (supports.length > 0) {
+            deleteSupport(0);
+        }
         supports = [];
+        dimensions = [];
+        updateSupportDisplay();
+        updateDimensions();
     }
 });
 
 supportType.addEventListener('change', () => {
-    if (supportType.value !== "Нет") {
+    if (supportType.value !== "Нет" && lengthBox.value != "" && lengthBox.value != 0) {
         addSupport.disabled = false;
     }
     else {
@@ -125,26 +179,26 @@ supportType.addEventListener('change', () => {
 addSupport.addEventListener('click', () => {
     switch (supportType.value) {
         case "Шарнирно-неподвижная":
-            drawPinnedSupport(supportX.value, 0);
+            drawPinnedSupport(parseFloat(supportX.value), 0);
             break;
         case "Шарнирно-подвижная":
-            drawRollerSupport(supportX.value, 0);
+            drawRollerSupport(parseFloat(supportX.value), 0);
             break;
         case "Заделка":
-            drawFixedSupport(supportX.value, 0);
+            drawFixedSupport(parseFloat(supportX.value), 0);
             break;
         default:
             break;
     }
     updateSupportDisplay();
+    updateDimensions();
 })
 
 supportList.addEventListener('click', (event) => {
     const target = event.target;
     if (target.tagName === 'LI') {
         var index = Array.prototype.indexOf.call(supportList.children, target);
-        mySVG.removeChild(supports[index][0]);
-        supports.splice(index, 1);
+        deleteSupport(index);
         updateSupportDisplay();
     }
 })
