@@ -92,12 +92,14 @@ function updateDimensions() {
         
     if (lengthBox.value == "" && lengthBox.value == 0)
         return;
-    dimensions = [0, parseFloat(lengthBox.value)];
+    dimensions = [0.0, parseFloat(lengthBox.value)];
     for (let i = 0; i < supports.length; i++) {
         if (supports[i][2] != 0 && supports[i][2] != lengthBox.value)
-            dimensions.push(supports[i][2]);
+            dimensions.push(parseFloat(supports[i][2]));
     }
-    dimensions.sort();
+    console.log("Before sort: " + dimensions);
+    dimensions.sort((a, b) => a - b);
+    console.log("After sort: " + dimensions);
     dimensionsSVG = document.createElementNS('http://www.w3.org/2000/svg',"g");
     let dimLines = document.createElementNS('http://www.w3.org/2000/svg',"path");
     dimLines.setAttributeNS(null, "d", "M 0, 50 l 500, 0");
@@ -106,7 +108,7 @@ function updateDimensions() {
         dimLines = document.createElementNS('http://www.w3.org/2000/svg',"path");
         dimLines.setAttributeNS(null, "d", `M ${(500 * dimensions[i] / parseFloat(lengthBox.value)).toString()}, 0 l 0, 55`);
         dimensionsSVG.appendChild(dimLines);
-        console.log(typeof(dimensions[i]));
+        //console.log(typeof(dimensions[i]));
         if (i > 0) {
             let dimText = document.createElementNS('http://www.w3.org/2000/svg',"text");
             dimText.innerHTML = (dimensions[i] - dimensions[i-1]).toString() + "м";
@@ -118,6 +120,8 @@ function updateDimensions() {
         }
     }
     mySVG.appendChild(dimensionsSVG);
+    //console.log(lengthBox.value)
+    //console.log(typeof(lengthBox.value))
 }
 
 function updateSupportDisplay() {
@@ -147,11 +151,11 @@ lengthBox.addEventListener("input", () => {
     if (lengthBox.value != "" && lengthBox.value != 0) {
         if (beamSVG==null) {
             beamSVG = drawBeam();
-            updateDimensions();
-            dimensions.push(lengthBox.value);
+            //dimensions.push(lengthBox.value);
         }
         if (supportType.value !== "Нет")
             addSupport.disabled = false;
+        updateDimensions();
     }
     else {
         addSupport.disabled = true;
