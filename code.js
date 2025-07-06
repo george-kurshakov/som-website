@@ -77,7 +77,7 @@ function drawFixedSupport(x, y) {
 function drawBeam() {
     let path = document.createElementNS('http://www.w3.org/2000/svg',"path");
     path.setAttributeNS(null, "d", "M 0,0 l 500, 0");
-    path.setAttributeNS(null, "style", "fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1");
+    path.setAttributeNS(null, "style", "fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1");
     path.setAttributeNS(null, "transform", "translate(50 50)");
     mySVG.appendChild(path);
     return path;
